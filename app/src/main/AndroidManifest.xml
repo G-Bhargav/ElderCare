@@ -28,9 +28,6 @@
             android:name=".ui.model.eyedisease"
             android:exported="false" />
         <activity
-            android:name=".ui.model.firstModelActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.chatting.ChatActivity"
             android:exported="false" />
         <activity
