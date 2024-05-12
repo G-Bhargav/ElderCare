@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.explore.eldercare.R
 import com.explore.eldercare.databinding.FragmentChatBinding
+import com.explore.eldercare.databinding.FragmentMedicine2Binding
 import com.explore.eldercare.ui.chatting.adapter.chatAdapter
+import com.explore.eldercare.ui.medicine.MedicineAdapter
+import com.explore.eldercare.ui.medicine.MedicineViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -30,7 +33,9 @@ class chatFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private lateinit var binding: FragmentChatBinding
+    private lateinit var adapter: chatAdapter
+    private var _binding: FragmentChatBinding? =null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +49,8 @@ class chatFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentChatBinding.inflate(layoutInflater)
+        _binding = FragmentChatBinding.inflate(layoutInflater)
+
         getData()
         // Inflate the layout for this fragment
         return binding.root

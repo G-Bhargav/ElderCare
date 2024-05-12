@@ -74,6 +74,7 @@ class DashboardFragment : Fragment() {
 
         binding.chats.setOnClickListener{
             findNavController().navigate(R.id.navigation_chat)
+
         }
 
 

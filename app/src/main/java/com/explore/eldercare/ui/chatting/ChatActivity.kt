@@ -1,8 +1,10 @@
 package com.explore.eldercare.ui.chatting
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.explore.eldercare.MainActivity
 import com.explore.eldercare.R
 import com.explore.eldercare.databinding.ActivityChatBinding
 import com.explore.eldercare.ui.chatting.adapter.messageAdapter
@@ -28,7 +30,31 @@ class ChatActivity : AppCompatActivity() {
         binding.imageView8.setOnClickListener{
             if(binding.message.text!!.isEmpty()){
                 Toast.makeText(this,"Please enter your text", Toast.LENGTH_SHORT).show()
+
             }else{
+                val rr=FirebaseDatabase.getInstance().getReference("healthAndUser")
+                    .child(intent.getStringExtra("uid")!!)
+
+                val uid = intent.getStringExtra("uid")
+
+                val namee=intent.getStringExtra("name")
+                val emaill=intent.getStringExtra("email")
+                val image=intent.getStringExtra("image")
+
+                val data=healthAndUser(
+                    image=image,
+                    name=namee,
+                    email=emaill,
+                    uid=uid
+                )
+                rr.setValue(data).addOnCompleteListener{
+                    if(it.isSuccessful){
+
+                        Toast.makeText(this,"message sent successfully", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(this, it.exception!!.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
                 storeData(binding.message.text.toString())
             }
         }

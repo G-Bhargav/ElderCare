@@ -25,12 +25,18 @@
         android:theme="@style/Theme.ElderCare"
         tools:targetApi="31">
         <activity
+            android:name=".ui.model.eyedisease"
+            android:exported="false" />
+        <activity
+            android:name=".ui.model.firstModelActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.chatting.ChatActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activities.EditProfileActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activities.MakeProfileActivity"
             android:exported="false" />
@@ -66,6 +72,7 @@
         <receiver
             android:name=".ui.notifications.BroadCastReceiver"
             android:enabled="true" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -76,6 +83,5 @@
                 android:resource="@xml/provider_paths" />
         </provider>
     </application>
-
 
 </manifest>

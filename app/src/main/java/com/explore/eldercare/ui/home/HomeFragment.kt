@@ -6,10 +6,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -17,6 +19,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.explore.eldercare.databinding.FragmentHomeBinding
 import com.explore.eldercare.ml.ModelFloat32
+import com.explore.eldercare.ui.chatting.ChatActivity
+import com.explore.eldercare.ui.model.eyedisease
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.DataType
@@ -25,7 +29,6 @@ import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
-import org.tensorflow.lite.support.image.ops.TransformToGrayscaleOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import retrofit2.Call
 import retrofit2.Callback
@@ -76,12 +79,13 @@ class HomeFragment : Fragment() {
                 val inputStream: InputStream? = requireContext().contentResolver.openInputStream(uri!!)
                 val bitmap = BitmapFactory.decodeStream(inputStream)
                 val imageProcessor = ImageProcessor.Builder()
-                    .add(ResizeOp(256,256,ResizeOp.ResizeMethod.BILINEAR))
+                    .add(ResizeOp(256,256, ResizeOp.ResizeMethod.BILINEAR))
                     .add(ResizeWithCropOrPadOp(224,224))
                     //.add(TransformToGrayscaleOp())
-                    .add(NormalizeOp(0.224f, 0.456f)
+                    .add(
+                        NormalizeOp(0.224f, 0.456f)
 
-                )
+                    )
                     .build()
 
                 var tensorImage = TensorImage(DataType.FLOAT32)
@@ -94,9 +98,43 @@ class HomeFragment : Fragment() {
                 val outputFeature0 = outputs?.outputFeature0AsTensorBuffer?.floatArray
                 val num= outputFeature0?.first()
 
+
                 println(activationFunction(num!!.toDouble()))
-                model.close()
+
+
+
+                }
+
             }
+
+
+
+//            GlobalScope.launch {
+//                val model = context?.let { it1 -> ModelFloat32.newInstance(it1) }
+//                val inputStream: InputStream? = requireContext().contentResolver.openInputStream(uri!!)
+//                val bitmap = BitmapFactory.decodeStream(inputStream)
+//                val imageProcessor = ImageProcessor.Builder()
+//                    .add(ResizeOp(256,256,ResizeOp.ResizeMethod.BILINEAR))
+//                    .add(ResizeWithCropOrPadOp(224,224))
+//                    //.add(TransformToGrayscaleOp())
+//                    .add(NormalizeOp(0.224f, 0.456f)
+//
+//                )
+//                    .build()
+//
+//                var tensorImage = TensorImage(DataType.FLOAT32)
+//                tensorImage.load(bitmap)
+//                tensorImage = imageProcessor.process(tensorImage)
+//                println(tensorImage.colorSpaceType)
+//                val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 224, 224, 3), DataType.FLOAT32)
+//                inputFeature0.loadBuffer(tensorImage.buffer)
+//                val outputs = model?.process(inputFeature0)
+//                val outputFeature0 = outputs?.outputFeature0AsTensorBuffer?.floatArray
+//                val num= outputFeature0?.first()
+//
+//                println(activationFunction(num!!.toDouble()))
+//                model.close()
+//            }
 //            val contentResolver = context?.contentResolver
 //            val base64Image = contentResolver?.let { it1 -> uri?.let { it2 ->
 //                imageToBase64(it1,
@@ -107,10 +145,12 @@ class HomeFragment : Fragment() {
 //                Log.i("data","done")
 //                sendImageToServer(base64Image)
 //            }
-        }
+
 
 
     }
+
+
 
     private fun activationFunction(a: Double): Double {
         val e = 2.671
